@@ -2,14 +2,15 @@ package talkiepi
 
 import (
 	"fmt"
-	"github.com/dchote/gumble/gumble"
-	"github.com/dchote/gumble/gumbleopenal"
-	"github.com/dchote/gumble/gumbleutil"
-	"github.com/kennygrant/sanitize"
 	"net"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/dchote/gumble/gumble"
+	"github.com/dchote/gumble/gumbleopenal"
+	"github.com/dchote/gumble/gumbleutil"
+	"github.com/kennygrant/sanitize"
 )
 
 func (b *Talkiepi) Init() {
@@ -104,6 +105,11 @@ func (b *Talkiepi) TransmitStop() {
 	b.IsTransmitting = false
 }
 
+// Alert the other users that you want attention
+func (b *Talkiepi) SendAttention() {
+	b.Client.Self.Channel.Send("attention: all", false)
+}
+
 func (b *Talkiepi) OnConnect(e *gumble.ConnectEvent) {
 	b.Client = e.Client
 
@@ -173,7 +179,17 @@ func (b *Talkiepi) ParticipantLEDUpdate() {
 }
 
 func (b *Talkiepi) OnTextMessage(e *gumble.TextMessageEvent) {
-	fmt.Printf("Message from %s: %s\n", e.Sender.Name, strings.TrimSpace(esc(e.Message)))
+	var message = strings.TrimSpace(esc(e.Message))
+	var sender = e.Sender.Name
+	fmt.Printf("Message from %s: %s\n", sender, message)
+
+	if sender == b.Client.Self.Name {
+		return
+	}
+
+	if message == "attention: all" || message == fmt.Sprintf("attention: %s", b.Client.Self.Name) {
+		b.LEDOn(b.AttentionLED)
+	}
 }
 
 func (b *Talkiepi) OnUserChange(e *gumble.UserChangeEvent) {
