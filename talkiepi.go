@@ -10,6 +10,7 @@ import (
 
 // Raspberry Pi GPIO pin assignments (CPU pin definitions)
 const (
+	AttentionLEDPin    uint = 8
 	OnlineLEDPin       uint = 18
 	ParticipantsLEDPin uint = 23
 	TransmitLEDPin     uint = 24
