@@ -35,7 +35,7 @@ func (b *Talkiepi) initGPIO() {
 				if b.Stream != nil {
 					if b.ButtonState == 1 {
 						fmt.Printf("Button is released\n")
-						b.TransmitStop()
+						b.TransmitStart()
 					} else {
 						fmt.Printf("Button is pressed\n")
 						b.TransmitStart()
