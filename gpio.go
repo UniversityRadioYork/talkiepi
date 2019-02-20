@@ -32,8 +32,6 @@ func (b *Talkiepi) initGPIO() {
 					b.TransmitStart()
 				}
 			} else {
-				fmt.Printf("Transmit Start")
-				b.TransmitStart()
 				currentState, err := b.Button.Read()
 
 				if currentState != b.ButtonState && err == nil {
