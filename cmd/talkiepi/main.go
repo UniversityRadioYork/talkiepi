@@ -21,7 +21,7 @@ func main() {
 	insecure := flag.Bool("insecure", true, "skip server certificate verification")
 	certificate := flag.String("certificate", "", "PEM encoded certificate and private key")
 	channel := flag.String("channel", "talkiepi", "mumble channel to join by default")
-	alwaysListening := flag.String("always-listening", "false", "Turns the mic on permenantly")
+	alwaysListening := flag.Bool("always-listening", false, "Turns the mic on permenantly")
 
 	flag.Parse()
 
