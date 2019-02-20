@@ -30,7 +30,8 @@ type Talkiepi struct {
 	ChannelName    string
 	IsConnected    bool
 	IsTransmitting bool
-
+	
+	AlwaysListening bool
 	GPIOEnabled     bool
 	OnlineLED       gpio.Pin
 	ParticipantsLED gpio.Pin
