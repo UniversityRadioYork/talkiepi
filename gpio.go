@@ -28,7 +28,7 @@ func (b *Talkiepi) initGPIO() {
 	go func() {
 		for {
 			if b.AlwaysListening {
-				if b.Stream != nil && !IsTransmitting {
+				if b.Stream != nil && !b.IsTransmitting {
 					b.TransmitStart()
 				}
 			} else {
