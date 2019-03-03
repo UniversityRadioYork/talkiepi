@@ -27,21 +27,27 @@ func (b *Talkiepi) initGPIO() {
 	b.Button = gpio.NewInput(ButtonPin)
 	go func() {
 		for {
-			currentState, err := b.Button.Read()
-
-			if currentState != b.ButtonState && err == nil {
-				b.ButtonState = currentState
-
-				if b.Stream != nil {
-					if b.ButtonState == 1 {
-						fmt.Printf("Button is released\n")
-						b.TransmitStop()
-					} else {
-						fmt.Printf("Button is pressed\n")
-						b.TransmitStart()
-					}
+			if b.AlwaysListening {
+				if b.Stream != nil && !b.IsTransmitting {
+					b.TransmitStart()
 				}
+			} else {
+				currentState, err := b.Button.Read()
 
+				if currentState != b.ButtonState && err == nil {
+					b.ButtonState = currentState
+
+					if b.Stream != nil {
+						if b.ButtonState == 1 {
+							fmt.Printf("Button is released\n")
+							b.TransmitStop()
+						} else {
+							fmt.Printf("Button is pressed\n")
+							b.TransmitStart()
+						}
+					}
+
+				}
 			}
 
 			time.Sleep(500 * time.Millisecond)

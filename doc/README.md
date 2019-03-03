@@ -8,7 +8,7 @@ This document also asumes that you have already configured network/wifi connecti
 By default talkiepi will run without any arguments, it will autogenerate a username and then connect to my mumble server.
 You can change this behavior by appending commandline arguments of `-server YOUR_SERVER_ADDRESS`, `-username YOUR_USERNAME` to the ExecStart line in `/etc/systemd/system/mumble.service` once installed.
 
-talkiepi will also accept arguments for `-password`, `-insecure`, `-certificate` and `-channel`, all defined in `cmd/talkiepi/main.go`, if you run your own mumble server, these will be self explanatory.
+talkiepi will also accept arguments for `-password`, `-insecure`, `-certificate`, `-always-listening` and `-channel`, all defined in `cmd/talkiepi/main.go`, if you run your own mumble server, these will be self explanatory.
 
 
 ## Create a user
@@ -36,9 +36,9 @@ export GOBIN=/home/mumble/bin
 cd $GOPATH
 
 go get github.com/dchote/gopus
-go get github.com/dchote/talkiepi
+go get github.com/UniversityRadioYork/talkiepi
 
-cd $GOPATH/src/github.com/dchote/talkiepi
+cd $GOPATH/src/github.com/UniversityRadioYork/talkiepi
 
 go build -o /home/mumble/bin/talkiepi cmd/talkiepi/main.go 
 ```
