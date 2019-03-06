@@ -89,6 +89,8 @@ func (b *Talkiepi) TransmitStart() {
 
 	// turn on our transmit LED
 	b.LEDOn(b.TransmitLED)
+	// Turn the AttentionLED off
+	b.LEDOff(b.AttentionLED)
 
 	b.Stream.StartSource()
 }
@@ -139,9 +141,7 @@ func (b *Talkiepi) OnDisconnect(e *gumble.DisconnectEvent) {
 	b.IsConnected = false
 
 	// turn off our LEDs
-	b.LEDOff(b.OnlineLED)
-	b.LEDOff(b.ParticipantsLED)
-	b.LEDOff(b.TransmitLED)
+	b.LEDOffAll()
 
 	if reason == "" {
 		fmt.Printf("Connection to %s disconnected, attempting again in 10 seconds...\n", b.Address)
@@ -189,6 +189,10 @@ func (b *Talkiepi) OnTextMessage(e *gumble.TextMessageEvent) {
 
 	if message == "attention: all" || message == fmt.Sprintf("attention: %s", b.Client.Self.Name) {
 		b.LEDOn(b.AttentionLED)
+	}
+	
+	if message == "attention: clear" {
+		b.LEDOff(b.AttentionLED)
 	}
 }
 
