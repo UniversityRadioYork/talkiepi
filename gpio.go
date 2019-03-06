@@ -79,4 +79,5 @@ func (b *Talkiepi) LEDOffAll() {
 	b.LEDOff(b.OnlineLED)
 	b.LEDOff(b.ParticipantsLED)
 	b.LEDOff(b.TransmitLED)
+	b.LEDOff(b.AttentionLED)
 }
