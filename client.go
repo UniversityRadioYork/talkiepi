@@ -2,14 +2,15 @@ package talkiepi
 
 import (
 	"fmt"
-	"github.com/dchote/gumble/gumble"
-	"github.com/dchote/gumble/gumbleopenal"
-	"github.com/dchote/gumble/gumbleutil"
-	"github.com/kennygrant/sanitize"
 	"net"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/dchote/gumble/gumble"
+	"github.com/dchote/gumble/gumbleopenal"
+	"github.com/dchote/gumble/gumbleutil"
+	"github.com/kennygrant/sanitize"
 )
 
 func (b *Talkiepi) Init() {
@@ -88,6 +89,8 @@ func (b *Talkiepi) TransmitStart() {
 
 	// turn on our transmit LED
 	b.LEDOn(b.TransmitLED)
+	// Turn the AttentionLED off
+	b.LEDOff(b.AttentionLED)
 
 	b.Stream.StartSource()
 }
@@ -102,6 +105,11 @@ func (b *Talkiepi) TransmitStop() {
 	b.LEDOff(b.TransmitLED)
 
 	b.IsTransmitting = false
+}
+
+// Alert the other users that you want attention
+func (b *Talkiepi) SendAttention() {
+	b.Client.Self.Channel.Send("attention: all", false)
 }
 
 func (b *Talkiepi) OnConnect(e *gumble.ConnectEvent) {
@@ -133,9 +141,7 @@ func (b *Talkiepi) OnDisconnect(e *gumble.DisconnectEvent) {
 	b.IsConnected = false
 
 	// turn off our LEDs
-	b.LEDOff(b.OnlineLED)
-	b.LEDOff(b.ParticipantsLED)
-	b.LEDOff(b.TransmitLED)
+	b.LEDOffAll()
 
 	if reason == "" {
 		fmt.Printf("Connection to %s disconnected, attempting again in 10 seconds...\n", b.Address)
@@ -173,7 +179,21 @@ func (b *Talkiepi) ParticipantLEDUpdate() {
 }
 
 func (b *Talkiepi) OnTextMessage(e *gumble.TextMessageEvent) {
-	fmt.Printf("Message from %s: %s\n", e.Sender.Name, strings.TrimSpace(esc(e.Message)))
+	var message = strings.TrimSpace(esc(e.Message))
+	var sender = e.Sender.Name
+	fmt.Printf("Message from %s: %s\n", sender, message)
+
+	if sender == b.Client.Self.Name {
+		return
+	}
+
+	if message == "attention: all" || message == fmt.Sprintf("attention: %s", b.Client.Self.Name) {
+		b.LEDOn(b.AttentionLED)
+	}
+	
+	if message == "attention: clear" {
+		b.LEDOff(b.AttentionLED)
+	}
 }
 
 func (b *Talkiepi) OnUserChange(e *gumble.UserChangeEvent) {

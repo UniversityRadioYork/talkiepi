@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/dchote/gpio"
-	"github.com/stianeikeland/go-rpio"
+	rpio "github.com/stianeikeland/go-rpio"
 )
 
 func (b *Talkiepi) initGPIO() {
@@ -58,6 +58,7 @@ func (b *Talkiepi) initGPIO() {
 	b.OnlineLED = gpio.NewOutput(OnlineLEDPin, false)
 	b.ParticipantsLED = gpio.NewOutput(ParticipantsLEDPin, false)
 	b.TransmitLED = gpio.NewOutput(TransmitLEDPin, false)
+	b.AttentionLED = gpio.NewOutput(AttentionLEDPin, false)
 }
 
 func (b *Talkiepi) LEDOn(LED gpio.Pin) {
@@ -84,4 +85,5 @@ func (b *Talkiepi) LEDOffAll() {
 	b.LEDOff(b.OnlineLED)
 	b.LEDOff(b.ParticipantsLED)
 	b.LEDOff(b.TransmitLED)
+	b.LEDOff(b.AttentionLED)
 }
