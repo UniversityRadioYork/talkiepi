@@ -17,6 +17,8 @@ const (
 	ButtonPin          uint = 25
 )
 
+var AttentionRootChannel = []string{"CIN", "Production", "Studio"}
+
 type Talkiepi struct {
 	Config *gumble.Config
 	Client *gumble.Client

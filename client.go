@@ -109,7 +109,7 @@ func (b *Talkiepi) TransmitStop() {
 
 // Alert the other users that you want attention
 func (b *Talkiepi) SendAttention() {
-	b.Client.Self.Channel.Send("attention: all", false)
+	b.Client.Channels.Find(AttentionRootChannel...).Send("attention: all", true)
 }
 
 func (b *Talkiepi) OnConnect(e *gumble.ConnectEvent) {
